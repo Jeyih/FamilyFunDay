@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Event Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="ticket">
+  <div class="page-head">
+    <a class="back-btn" href="index.html">←</a>
+    <div class="page-title">Event Games</div>
+  </div>
+  <div class="page-body" id="gamesList"></div>
+</div>
+
+<script src="config.js"></script>
+<script>
+const gamesListEl = document.getElementById('gamesList');
+GAMES.forEach((g,i)=>{
+  const row = document.createElement('div');
+  row.className = 'game-item';
+  row.innerHTML = `<div class="game-num">${String(i+1).padStart(2,'0')}</div><div class="game-name">${g}</div>`;
+  gamesListEl.appendChild(row);
+});
+</script>
+</body>
+</html>

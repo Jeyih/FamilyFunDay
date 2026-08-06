@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Maps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+</head>
+<body>
+
+<div class="ticket">
+  <div class="page-head">
+    <a class="back-btn" href="index.html">←</a>
+    <div class="page-title">Maps</div>
+  </div>
+  <div class="page-body">
+    <div id="map"></div>
+    <div class="map-actions">
+      <button class="btn-locate" onclick="locateAndRoute()">📍 My Location</button>
+    </div>
+    <div class="route-info" id="routeInfo"></div>
+    <div class="map-note">Tap "My Location" to see the route and travel time from where you are to the venue. Venue pin is a placeholder — update the coordinates in config.js once the real venue is set.</div>
+    <div class="map-note">Open your location in your device to see the route and travel time from where you are to the venue.</div>
+    <div class="map-note">If you're location is not match where you are, restart this site and the location on your device.</div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+let map = L.map('map').setView([VENUE.lat, VENUE.lng], 15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors',
+  maxZoom: 19
+}).addTo(map);
+L.marker([VENUE.lat, VENUE.lng]).addTo(map).bindPopup(VENUE.name);
+setTimeout(()=>map.invalidateSize(), 150);
+
+let userMarker, routeLine;
+
+function locateAndRoute(){
+  const info = document.getElementById('routeInfo');
+  if(!navigator.geolocation){
+    info.classList.add('show');
+    info.textContent = "Your browser doesn't support location access.";
+    return;
+  }
+  info.classList.add('show');
+  info.textContent = "Finding your location…";
+  navigator.geolocation.getCurrentPosition(async (pos)=>{
+    const { latitude, longitude } = pos.coords;
+    if(userMarker) map.removeLayer(userMarker);
+    userMarker = L.marker([latitude, longitude], {
+      icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#2C4A8C;border:3px solid #fff;box-shadow:0 0 0 2px #2C4A8C;"></div>' })
+    }).addTo(map).bindPopup("You are here");
+
+    info.textContent = "Getting the route…";
+    try{
+      const url = `https://router.project-osrm.org/route/v1/driving/${longitude},${latitude};${VENUE.lng},${VENUE.lat}?overview=full&geometries=geojson`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if(data.routes && data.routes.length){
+        const coords = data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+        if(routeLine) map.removeLayer(routeLine);
+        routeLine = L.polyline(coords, { color:'#B23A2E', weight:4 }).addTo(map);
+        map.fitBounds(routeLine.getBounds(), { padding:[24,24] });
+        const km = (data.routes[0].distance/1000).toFixed(1);
+        const mins = Math.round(data.routes[0].duration/60);
+        info.textContent = `${km} km away · about ${mins} min by car`;
+      } else {
+        map.setView([latitude, longitude], 14);
+        info.textContent = "Located you, but couldn't fetch a driving route right now.";
+      }
+    }catch(e){
+      map.setView([latitude, longitude], 14);
+      info.textContent = "Located you, but the routing service is unavailable right now.";
+    }
+  }, ()=>{
+    info.textContent = "Location access was denied — enable it in your browser to see the route.";
+  });
+}
+</script>
+</body>
+</html>
