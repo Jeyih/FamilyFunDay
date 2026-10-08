@@ -23,18 +23,19 @@
       <button class="btn-locate" onclick="locateAndRoute()">📍 My Location</button>
     </div>
     <div class="route-info" id="routeInfo"></div>
-    <div class="map-note">Tap "My Location" to see the route and travel time from where you are to the venue.</div>
-    <div class="map-note">Open your location in your device to see the route and travel time from where you are to the venue.</div>
-    <div class="map-note">If you're location is not match where you are, try to click again the button to get your exact location.</div>
+    <div class="map-note">&bull; Tap "My Location" to see the route and travel time from where you are to the venue.</div>
+    <div class="map-note">&bull; Open your location in your device to see the route and travel time from where you are to the venue.</div>
+    <div class="map-note">&bull; If you're location is not match where you are, try to click again the button to get your exact location.</div>
+    <div class="map-note">&bull; If you're location is still not match where you are, refresh the page and try again.</div>
   </div>
 </div>
 
 <script src="config.js"></script>
 <script>
 let map = L.map('map').setView([VENUE.lat, VENUE.lng], 15);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors',
-  maxZoom: 19
+L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=pMnBOzNoAsPf0Hi27KTc', {
+  attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom: 20
 }).addTo(map);
 L.marker([VENUE.lat, VENUE.lng]).addTo(map).bindPopup(VENUE.name);
 setTimeout(()=>map.invalidateSize(), 150);
