@@ -44,7 +44,6 @@ body {
   position: relative;
 }
 
-/* --- stub 1: logo + countdown (index page) --- */
 .stub-top {
   padding: 34px 26px 26px;
   text-align: center;
@@ -119,7 +118,6 @@ body {
   letter-spacing: .02em;
 }
 
-/* --- perforation divider --- */
 .perf-wrap {
   position: relative;
   height: 0;
@@ -139,7 +137,6 @@ body {
   background: var(--paper);
 }
 
-/* --- stub 2: event + buttons (index page) --- */
 .stub-bottom {
   padding: 28px 26px 32px;
   text-align: center;
@@ -221,7 +218,6 @@ body {
   opacity: .7;
 }
 
-/* ===== sub-page layout (maps / attire / games) ===== */
 .page-head {
   display: flex;
   align-items: center;
@@ -260,7 +256,6 @@ body {
   padding: 20px 22px 30px;
 }
 
-/* maps page */
 #map {
   width: 100%;
   height: 300px;
@@ -313,7 +308,6 @@ body {
   line-height: 1.5;
 }
 
-/* attire page */
 .swatch-row {
   display: flex;
   gap: 14px;
@@ -374,7 +368,6 @@ body {
   font-weight: 700;
 }
 
-/* games page */
 .game-item {
   display: flex;
   align-items: center;
